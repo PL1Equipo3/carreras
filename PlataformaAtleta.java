@@ -442,17 +442,25 @@ public class PlataformaAtleta {
 		fechaFin=rs.getDate(3);
 		//System.out.println(fechaInicio);
 		//System.out.println(fechaFin);
+		
+		String sInicio = (String) (fechaInicio.toString()).subSequence(0, 9);
+		String sFin = (String) (fechaFin.toString()).subSequence(0, 9);
+		String sInscripcion = (String) (fechaInscripcion.toString()).subSequence(0, 9);
+		
+
+		boolean cond = !( (fechaInicio.before(fechaInscripcion) || sInicio.equals(sInscripcion)) 
+				&& (fechaFin.after(fechaInscripcion) || sFin.equals(sInscripcion)) );
 
 		//Comprobar en que plazo se realizó la inscripción
-		while( !((fechaInicio.before(fechaInscripcion) || fechaInicio.equals(fechaInscripcion)) 
-				&& (fechaFin.after(fechaInscripcion) || fechaFin.equals(fechaInscripcion)))
-				&& (rs.next()) ){
-
+		while( cond ) {
+			rs.next();
 			fechaInicio=rs.getDate(2);
 			fechaFin=rs.getDate(3);
 
+			cond = !( (fechaInicio.before(fechaInscripcion) || sInicio.equals(sInscripcion)) 
+					&& (fechaFin.after(fechaInscripcion) || sFin.equals(sInscripcion)) );
 		}
-
+		
 		Cuota_abonada = rs.getFloat(4);
 		//System.out.println(Cuota_abonada);
 
