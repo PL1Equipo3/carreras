@@ -286,26 +286,62 @@ public class PlataformaAtleta {
 		}
 
 		//Fecha de nacimiento
-		//Suponemos que el usuario introduce una fecha correcta con el formato indicado!!!
+		boolean check=true;
+		String DiaTemp = null, MesTemp = null, AñoTemp = null;
+		int DiaInt, MesInt, AñoInt;
+
 		System.out.println("\tSu Fecha de nacimiento*:");
-		System.out.print("\t\tDía (dd): ");
-		res = in.nextLine();
-		while (res.equals("")) {
-			System.out.print("Campo obligatorio!");
-			res= in.nextLine();
+		while(check==true){
+			System.out.print("\t\tDía (dd): ");	
+			DiaTemp=in.nextLine();
+			while (DiaTemp.equals("")) {
+				System.out.print("Campo obligatorio!");
+				DiaTemp= in.nextLine();
+			}
+			DiaInt=Integer.parseInt(DiaTemp);
+
+			System.out.print("\t\tMes (mm): ");
+			MesTemp = in.nextLine();
+			while (MesTemp.equals("")) {
+				System.out.print("Campo obligatorio! ");
+				MesTemp= in.nextLine();
+			}
+			MesInt=Integer.parseInt(MesTemp);
+
+			System.out.print("\t\tAño (aaaa): ");
+			AñoTemp = in.nextLine();
+			while (AñoTemp.equals("")) {
+				System.out.print("Campo obligatorio! ");
+				AñoTemp= in.nextLine();
+			}
+			AñoInt=Integer.parseInt(AñoTemp);
+
+			check=false;
+			
+			//VALIDAR FECHA
+			if (AñoInt<1900 || MesInt>12 || DiaInt>31){
+				System.out.println("Error al introducir la fecha. Fecha inválida"); 
+				check=true;
+			}
+
+			else{	
+
+				if (MesTemp.equals("01")||MesTemp.equals("03")||MesTemp.equals("05")||MesTemp.equals("07")||MesTemp.equals("08")||MesTemp.equals("10")||MesTemp.equals("12")){
+					if(DiaInt>31) {System.out.println("Error al introducir la fecha. Fecha inválida"); check=true;}
+				}
+				else if (MesTemp.equals("02")){
+					if(AñoInt % 4 == 0 && AñoInt % 100 != 0 || AñoInt % 400 == 0){			//Bisiesto
+
+						if (DiaInt>29) {System.out.println("Error al introducir la fecha. Fecha inválida"); check=true;}
+					}
+					else if (DiaInt>28) {System.out.println("Error al introducir la fecha. Fecha inválida"); check=true;}
+				}
+				else if (DiaInt>30) {System.out.println("Error al introducir la fecha. Fecha inválida"); check=true;}
+			}
 		}
-		System.out.print("\t\tMes (mm): ");
-		res = in.nextLine()+"-"+res;
-		while (res.equals("")) {
-			System.out.print("Campo obligatorio! ");
-			res= in.nextLine();
-		}
-		System.out.print("\t\tAño (aaaa): ");
-		res = in.nextLine()+"-"+res;
-		while (res.equals("")) {
-			System.out.print("Campo obligatorio! ");
-			res= in.nextLine();
-		}
+
+		res=AñoTemp+"-"+MesTemp+"-"+DiaTemp;
+
 		introducirDato(true, "#"+res+"#", 4, datosAtleta);
 
 		//E-mail
@@ -697,6 +733,7 @@ public class PlataformaAtleta {
 	}
 
 
+
 	private static String CalculaCategoria (String Id_Inscripcion, String Id_competicion, String Id_atleta, Date FechaNac, String sexo) throws Exception{			
 		//Variables y ED
 		String SQL, C=null;
@@ -705,20 +742,6 @@ public class PlataformaAtleta {
 		ArrayList<Integer> edadMax = new ArrayList<Integer>();
 		int Cont=0, varEdadMin, varEdadMax;		
 
-
-		//VALIDAR FECHA
-		if (FechaNac.getMonth()==1||FechaNac.getMonth()==3||FechaNac.getMonth()==5||FechaNac.getMonth()==7||FechaNac.getMonth()==8||FechaNac.getMonth()==10||FechaNac.getMonth()==12){
-			if(FechaNac.getDate()>31) System.err.println("Error al introducir la fecha. Fecha inválida");
-		}
-		else if (FechaNac.getMonth()==2){
-			if(FechaNac.getYear() % 4 == 0 && FechaNac.getYear() % 100 != 0 || FechaNac.getYear() % 400 == 0){			//Bisiesto
-				if (FechaNac.getDate()>29) System.err.println("Error al introducir la fecha. Fecha inválida");
-			}
-			else if (FechaNac.getDate()>28) System.err.println("Error al introducir la fecha. Fecha inválida");
-		}
-		else if (FechaNac.getDate()>30) System.err.println("Error al introducir la fecha. Fecha inválida");
-
-				
 		int Edad = CalculaEdad(FechaNac);						//Calcular Edad
 
 		//Consulta SQL para saber las categorías 
@@ -742,7 +765,7 @@ public class PlataformaAtleta {
 			}
 		}
 
-	
+
 		return C;
 
 	}
@@ -756,4 +779,6 @@ public class PlataformaAtleta {
 
 		return Edad;
 	}
+
+
 }
