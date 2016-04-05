@@ -53,6 +53,9 @@ public class CrearCompetición extends JFrame {
 	private JLabel lblFechaIncorrecta;
 	private JLabel lblCompeticinRegistrada;
 	private JButton btnAceptarComp;
+	private CrearCategoria VAñadir;
+	public static  DefaultListModel model;
+
 
 	/**
 	 * Launch the application.
@@ -88,6 +91,7 @@ public class CrearCompetición extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new CardLayout(0, 0));
+		VAñadir=new CrearCategoria(this);
 		
 		final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		contentPane.add(tabbedPane, "name_841985683922062");
@@ -329,7 +333,7 @@ public class CrearCompetición extends JFrame {
 						//Pasar las fechas a tipo java.sql.Date para poder compararlas
 						java.sql.Date fechaA = new java.sql.Date(fechaActual.getTime());
 						java.sql.Date fechaC = new java.sql.Date(fechaComp.getTime());
-						//Comprobar so la fecha de la competición es posterior a la actual.
+						//Comprobar si la fecha de la competición es posterior a la actual.
 						
 						if ( fechaC.before(fechaA) ) {
 							lblFechaIncorrecta.setText("Fecha incorrecta");
@@ -353,16 +357,16 @@ public class CrearCompetición extends JFrame {
 									+ "'"+tfLugar.getText()+"', "  						     //Lugar
 									+ "'"+spDistancia.getValue()+"Km' )";  	              	 //Distancia
 							s.execute(nuevaComp);
-							
+							tabbedPane.remove(0);
+						    tabbedPane.addTab("Añadir Categorías", null, panelAñadirCateg, null);
+							panelAñadirCateg.setLayout(null);
 						}
 						}
 				} catch (SQLException | ParseException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				tabbedPane.remove(0);
-				tabbedPane.addTab("Añadir Categorías", null, panelAñadirCateg, null);
-				panelAñadirCateg.setLayout(null);
+				
 			}
 		});
 		btnAceptarComp.setEnabled(false);
@@ -379,7 +383,7 @@ public class CrearCompetición extends JFrame {
 	
 		
 		//Modelo para la lista
-		final DefaultListModel model = new DefaultListModel();
+		 model = new DefaultListModel();
 		
 		
 		//Label de aviso
@@ -396,11 +400,29 @@ public class CrearCompetición extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {	
 				String[] Categoría;
 				String orden;
+				ResultSet ID;
 				String delimitadores = "[ -]+";
+				String añoFin;
 				
 				for (int i=0; i<model.size(); i++){
 					//Partimos la categoría para poder insertar en la base de datos
 					Categoría = model.getElementAt(i).toString().split(delimitadores);
+					if(Categoría[2].equals("Inf")){
+						añoFin = "null";
+					}
+					else{
+						añoFin = Categoría[2];
+					}
+					orden = "SELECT Id_categoría FROM Categoría WHERE( Nombre='"+Categoría[0]+"' AND [Año inicio]= "+Categoría[1]+" AND [Año fin]= "+añoFin+" AND Sexo= '"+Categoría[3]+"' AND Tipo= '"+cpTipo.getSelectedItem()+"')";
+					try {
+					s.execute(orden);
+					ID = s.getResultSet();
+					if(ID.next()){
+						orden = "INSERT INTO [Categorías de la competición] VALUES ( '"+ tfNombre.getText()+"-"+spEdición.getValue()+"', "
+								+ID.getString(1)+")";
+						s.execute(orden);
+					}
+					else{
 					orden = "INSERT INTO Categoría VALUES ( 1, ";
 					for(int j=0; j<Categoría.length; j++){
 						switch(j){
@@ -426,38 +448,25 @@ public class CrearCompetición extends JFrame {
 					}
 					orden = orden + "'"+cpTipo.getSelectedItem()+"' )"; //Tipo
 					
-					try {
+					
 						s.execute(orden); 
 						orden = "SELECT TOP 1 Id_categoría FROM Categoría ORDER BY Id_categoría DESC";
 						s.execute(orden);
 						ResultSet r = s.getResultSet();
 						r.next();
-						orden = "INSERT INTO Categorías_de_la_competición VALUES ( '"+ tfNombre.getText()+"-"+spEdición.getValue()+"', "
+						orden = "INSERT INTO [Categorías de la competición] VALUES ( '"+ tfNombre.getText()+"-"+spEdición.getValue()+"', "
 								+r.getLong(1)+")";
 						s.execute(orden);
+					}
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} 
+					}
+				
 				}
 				lblCategorasAadidasCorrectamente.setText("Categorías añadidas correctamente");
 			}
 		});;
-		
-		//LISTA DE CATEGORÍAS
-		final JList listCategorías = new JList();
-		listCategorías.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent arg0) {
-				if (model.isEmpty()){
-					btnAceptarCateg.setEnabled(false);
-				}
-				else{
-					btnAceptarCateg.setEnabled(true);
-				}
-			}
-		});
-		listCategorías.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		listCategorías.setModel(model);
 		//Categorías por defecto
 		model.addElement("Cadete 15-17 Masculino");
 		model.addElement("Cadete 15-17 Femenino");
@@ -469,8 +478,6 @@ public class CrearCompetición extends JFrame {
 		model.addElement("Senior 24-39 Femenino");
 		model.addElement("Veterana 45-Inf Masculino");
 		model.addElement("Veterana 40-Inf Femenino");
-		listCategorías.setBounds(10, 39, 195, 191);
-		panelAñadirCateg.add(listCategorías);
 		
 		JLabel lblCategorias = new JLabel("Categorias de tu competición:");
 		lblCategorias.setBounds(10, 14, 195, 14);
@@ -480,7 +487,7 @@ public class CrearCompetición extends JFrame {
 		JButton btnAñadir = new JButton("Añadir");
 		btnAñadir.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				model.addElement("Ejemplo");
+				VAñadir.setVisible(true);
 				lblCategorasAadidasCorrectamente.setText("");
 			}
 		});
@@ -488,6 +495,7 @@ public class CrearCompetición extends JFrame {
 		panelAñadirCateg.add(btnAñadir);
 		
 		//BOTÓN DE ELIMINAR
+		final JList listCategorías = new JList();
 		JButton btnEliminar = new JButton("Eliminar");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -500,6 +508,26 @@ public class CrearCompetición extends JFrame {
 		});
 		btnEliminar.setBounds(249, 88, 89, 23);
 		panelAñadirCateg.add(btnEliminar);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(20, 39, 195, 191);
+		panelAñadirCateg.add(scrollPane);
+		
+		//LISTA DE CATEGORÍAS
+		
+		scrollPane.setViewportView(listCategorías);
+		listCategorías.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent arg0) {
+				if (model.isEmpty()){
+					btnAceptarCateg.setEnabled(false);
+				}
+				else{
+					btnAceptarCateg.setEnabled(true);
+				}
+			}
+		});
+		listCategorías.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listCategorías.setModel(model);
 		
 		}
 		catch(Exception ex){
