@@ -83,7 +83,7 @@ public class CrearCompetición extends JFrame {
 			//Conexión a la BD
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 			//Ruta absoluta o relativa como parÃ¡metro de getConnection
-			Connection conn=DriverManager.getConnection("jdbc:ucanaccess://Carreras 2ª versión.accdb");
+			Connection conn=DriverManager.getConnection("jdbc:ucanaccess://Carreras.accdb");
 			final Statement s = conn.createStatement();
 
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,7 +93,7 @@ public class CrearCompetición extends JFrame {
 			setContentPane(contentPane);
 			contentPane.setLayout(new CardLayout(0, 0));
 			VAñadir=new CrearCategoria(this);
-			Plazos=new CreacionPlazos(this);
+			
 
 			final JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 			contentPane.add(tabbedPane, "name_841985683922062");
@@ -469,6 +469,10 @@ public class CrearCompetición extends JFrame {
 
 					}
 					lblCategorasAadidasCorrectamente.setText("Categorías añadidas correctamente");
+					String competi = tfNombre.getText()+"-"+spEdición.getValue();
+					Plazos=new CreacionPlazos(CrearCompetición.this, competi);
+					Plazos.setVisible(true);
+					CrearCompetición.this.dispose();
 				}
 			});;
 			//Categorías por defecto
@@ -533,8 +537,7 @@ public class CrearCompetición extends JFrame {
 			listCategorías.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 			listCategorías.setModel(model);
 
-      //BOTON PLAZOS
-			JButton bPlazos = new JButton("Plazos");
+			/*JButton bPlazos = new JButton("Plazos");
 			bPlazos.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
 					Plazos.setVisible(true);
@@ -542,7 +545,7 @@ public class CrearCompetición extends JFrame {
 			});
 			bPlazos.setBounds(249, 207, 89, 23);
 			panelAñadirCateg.add(bPlazos);
-
+*/
 		}
 		catch(Exception ex){
 			ex.printStackTrace();
