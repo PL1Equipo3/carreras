@@ -68,7 +68,7 @@ public class CreacionPlazos extends JFrame {
 
 
 			setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			setBounds(100, 100, 630, 348);
+			setBounds(100, 100, 664, 364);
 			contentPane = new JPanel();
 			contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 			setContentPane(contentPane);
@@ -84,24 +84,24 @@ public class CreacionPlazos extends JFrame {
 			final DefaultListModel lmC  = new DefaultListModel();
 
 			final JList listIni = new JList();
-			listIni.setBounds(294, 31, 91, 243);
+			listIni.setBounds(309, 31, 91, 243);
 			listIni.setModel(lmI);
 			panel.add(listIni);
 
 
 			final JComboBox cbDia = new JComboBox();
 			cbDia.setModel(new DefaultComboBoxModel(new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"}));
-			cbDia.setBounds(58, 79, 49, 20);
+			cbDia.setBounds(10, 79, 49, 20);
 			panel.add(cbDia);
 
 			final JComboBox cbMes = new JComboBox();
 			cbMes.setModel(new DefaultComboBoxModel(new String[] {"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"}));
-			cbMes.setBounds(137, 79, 49, 20);
+			cbMes.setBounds(81, 79, 49, 20);
 			panel.add(cbMes);
 
 			final JComboBox cbAño = new JComboBox();
 			cbAño.setModel(new DefaultComboBoxModel(new String[] {"2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028"}));
-			cbAño.setBounds(214, 79, 63, 20);
+			cbAño.setBounds(153, 79, 63, 20);
 			panel.add(cbAño);
 
 			JButton bAñadirIni = new JButton("Añadir fecha de incio");
@@ -116,20 +116,20 @@ public class CreacionPlazos extends JFrame {
 
 				}
 			});
-			bAñadirIni.setBounds(10, 128, 155, 23);
+			bAñadirIni.setBounds(10, 133, 155, 23);
 			panel.add(bAñadirIni);
 
 			JList listFin = new JList();
-			listFin.setBounds(391, 31, 91, 243);
+			listFin.setBounds(421, 31, 91, 243);
 			listFin.setModel(lmF);
 			panel.add(listFin);
 
 			JLabel fechaInicio = new JLabel("Fecha Inicio");
-			fechaInicio.setBounds(313, 11, 68, 14);
+			fechaInicio.setBounds(321, 11, 68, 14);
 			panel.add(fechaInicio);
 
 			JLabel fechaFin = new JLabel("Fecha Fin");
-			fechaFin.setBounds(411, 11, 56, 14);
+			fechaFin.setBounds(442, 11, 56, 14);
 			panel.add(fechaFin);
 
 			JLabel titulo = new JLabel("Añadir fechas a\r\n competición");
@@ -140,9 +140,9 @@ public class CreacionPlazos extends JFrame {
 			JButton bAceptar = new JButton("Aceptar");
 			bAceptar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					String Dia, Mes, Año;
+					String Dia, Mes, Año, DiaA, MesA, AñoA;
 					boolean test;
-					int AñoInt;
+					int AñoInt, MesInt, DiaInt, DiaAInt, MesAInt, AñoAInt;
 					//Validación de todas las fechas
 					if ((lmI.size() != lmF.size()) || (lmI.size() != lmC.size())){
 						JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
@@ -155,62 +155,98 @@ public class CreacionPlazos extends JFrame {
 							Año = (String) lmI.getElementAt(i);
 
 
-							Dia=Dia.substring(8, 9);
-							Mes=Mes.substring(5, 6);
-							Año=Año.substring(0, 3);
+							Dia = Dia.substring(8, 10);
+							Mes = Mes.substring(5, 7);
+							Año = Año.substring(0, 4);
 
+							MesInt = Integer.parseInt(Mes);
+							DiaInt = Integer.parseInt(Dia);
 							AñoInt = Integer.parseInt(Año);
 
+							if (i != 0){
+								DiaA = (String) lmF.getElementAt(i-1);
+								MesA = (String) lmF.getElementAt(i-1);
+								AñoA = (String) lmF.getElementAt(i-1);
+
+								DiaA = DiaA.substring(8, 10);
+								MesA = MesA.substring(5, 7);
+								AñoA = AñoA.substring(0, 4);
+
+								MesAInt = Integer.parseInt(MesA);
+								DiaAInt = Integer.parseInt(DiaA);
+								AñoAInt = Integer.parseInt(AñoA);
 
 
-							if (Mes.equals("02")){
-								if(AñoInt % 4 == 0 && AñoInt % 100 != 0 || AñoInt % 400 == 0){			//Bisiesto
-
-									if (Dia.equals("30") || Dia.equals("31"))  {
-										JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
-										test=false;}
+								if (AñoAInt > AñoInt){
+									JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+									test=false;
+								}else if (MesAInt > MesInt) {
+									JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+									test=false;
+								}else if (DiaAInt >= DiaInt){
+									JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+									test=false;
 								}
-								else if (Dia.equals("30") || Dia.equals("31") || Dia.equals("29")) {JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
-								test=false;}
-							}
-							else if (Mes.equals("04")||Mes.equals("06")||Mes.equals("09")||Mes.equals("11")){
-								if (Dia.equals("31")) {JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
-								test=false;}
 							}
 
 
 
-							Dia =(String) lmF.getElementAt(i);
+							if (test==true){
+								test=fechaCorrecta(Dia,Mes,AñoInt);
+							}
+
+							Dia = (String) lmF.getElementAt(i);
 							Mes = (String) lmF.getElementAt(i);
 							Año = (String) lmF.getElementAt(i);
 
-							Dia=Dia.substring(8, 9);
-							Mes=Mes.substring(5, 6);
-							Año=Año.substring(0, 3);
+							Dia=Dia.substring(8, 10);
+							Mes=Mes.substring(5, 7);
+							Año=Año.substring(0, 4);
+
 
 							AñoInt = Integer.parseInt(Año);
+							MesInt = Integer.parseInt(Mes);
+							DiaInt = Integer.parseInt(Dia);
 
 
-							if (Mes.equals("02")){
-								if(AñoInt % 4 == 0 && AñoInt % 100 != 0 || AñoInt % 400 == 0){			//Bisiesto
+							DiaA = (String) lmI.getElementAt(i);
+							MesA = (String) lmI.getElementAt(i);
+							AñoA = (String) lmI.getElementAt(i);
 
-									if (Dia.equals("30") || Dia.equals("31"))  {
+							DiaA=DiaA.substring(8, 10);
+							MesA=MesA.substring(5, 7);
+							AñoA=AñoA.substring(0, 4);
+
+							MesAInt = Integer.parseInt(MesA);
+							DiaAInt = Integer.parseInt(DiaA);
+							AñoAInt = Integer.parseInt(AñoA);
+
+
+							if (AñoAInt > AñoInt){
+								JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+								test=false;
+							}else if (AñoAInt == AñoInt) {
+								if (MesAInt > MesInt){
+									JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+									test=false;
+								}else if (MesAInt == MesInt){
+									if(DiaAInt >= DiaInt){
 										JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
-										test=false;}
+										test=false;
+									}
 								}
-								else if (Dia.equals("30") || Dia.equals("31") || Dia.equals("29")) {JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
-								test=false;}
-							}
-							else if (Mes.equals("04")||Mes.equals("06")||Mes.equals("09")||Mes.equals("11")){
-								if (Dia.equals("31")) {JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
-								test=false;}
 							}
 
 
+
+							if (test==true){
+								test=fechaCorrecta(Dia,Mes,AñoInt);
+							}
 
 
 						}	//Fin del for
-						if (test=true){
+
+						if (test==true){
 
 							for (int i=0; i<lmI.size();i++){
 								String DiaI = (String) lmI.getElementAt(i);
@@ -236,35 +272,36 @@ public class CreacionPlazos extends JFrame {
 									String SQL="INSERT INTO Plazos VALUES (8, #"+AñoI+"-"+MesI+"-"+DiaI+"#, #"+AñoF+"-"+MesF+"-"+DiaF+"#, "+Cuota+", '"+id_competicion+"' )";
 									System.out.println(SQL);
 									s.execute(SQL);
-									
-								} catch (SQLException e) {
+
+								}
+								catch (SQLException e) {
 									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
-								JOptionPane.showMessageDialog(null, "Datos Introducidos con éxito","OK",JOptionPane.INFORMATION_MESSAGE);
+
 
 							}
-
-						}
-						JOptionPane.showMessageDialog(null, "Datos Introducidos con éxito","OK",JOptionPane.INFORMATION_MESSAGE);
-						System.exit(0);
+							JOptionPane.showMessageDialog(null, "Datos Introducidos con éxito","OK",JOptionPane.INFORMATION_MESSAGE);
+							System.exit(0);
+						}	//Fin del if						
 					}	//Fin del else
-				}
-			}
+
+				}	//Fin actionPerformed
+			}	//Fin botón aceptar
 					);
-			bAceptar.setBounds(10, 263, 89, 23);
+			bAceptar.setBounds(528, 281, 89, 23);
 			panel.add(bAceptar);
 
 			JLabel lblDia = new JLabel("Dia");
-			lblDia.setBounds(65, 64, 24, 14);
+			lblDia.setBounds(25, 64, 24, 14);
 			panel.add(lblDia);
 
 			JLabel lblMes = new JLabel("Mes");
-			lblMes.setBounds(147, 64, 46, 14);
+			lblMes.setBounds(91, 64, 46, 14);
 			panel.add(lblMes);
 
 			JLabel lblAo = new JLabel("Año");
-			lblAo.setBounds(231, 61, 46, 14);
+			lblAo.setBounds(170, 64, 46, 14);
 			panel.add(lblAo);
 
 			JButton bFechafin = new JButton("Añadir fecha fin");
@@ -283,7 +320,7 @@ public class CreacionPlazos extends JFrame {
 
 
 
-			bFechafin.setBounds(10, 163, 155, 23);
+			bFechafin.setBounds(175, 133, 126, 23);
 			panel.add(bFechafin);
 
 			JButton bBorrar = new JButton("Borrar");
@@ -300,21 +337,21 @@ public class CreacionPlazos extends JFrame {
 					}
 				}
 			});
-			bBorrar.setBounds(188, 143, 89, 23);
+			bBorrar.setBounds(309, 281, 63, 23);
 			panel.add(bBorrar);
 
 			JLabel lblCuota = new JLabel("Cuota");
-			lblCuota.setBounds(509, 11, 46, 14);
+			lblCuota.setBounds(561, 11, 46, 14);
 			panel.add(lblCuota);
 
 			JList listC = new JList();
-			listC.setBounds(492, 31, 77, 243);
+			listC.setBounds(540, 31, 77, 243);
 			listC.setModel(lmC);
 			panel.add(listC);
 
 			final JFormattedTextField tfCuota = new JFormattedTextField();
-			tfCuota.setText("0€");
-			tfCuota.setBounds(10, 211, 89, 20);
+			tfCuota.setText("0");
+			tfCuota.setBounds(10, 222, 89, 20);
 			panel.add(tfCuota);
 
 			JButton bCuota = new JButton("Añadir Cuota");
@@ -325,12 +362,31 @@ public class CreacionPlazos extends JFrame {
 					lmC.addElement(Cuota);				
 				}
 			});
-			bCuota.setBounds(157, 210, 127, 23);
+			bCuota.setBounds(109, 221, 110, 23);
 			panel.add(bCuota);
 		}
 		catch (Exception ex){
 			ex.printStackTrace();
 		}
+	}
+
+	public boolean fechaCorrecta (String Dia, String Mes, int AñoInt){
+		boolean test = true;
+		if (Mes.equals("02")){
+			if(AñoInt % 4 == 0 && AñoInt % 100 != 0 || AñoInt % 400 == 0){			//Bisiesto
+
+				if (Dia.equals("30") || Dia.equals("31"))  {
+					JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+					test=false;}
+			}
+			else if (Dia.equals("30") || Dia.equals("31") || Dia.equals("29")) {JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+			test=false;}
+		}
+		else if (Mes.equals("04")||Mes.equals("06")||Mes.equals("09")||Mes.equals("11")){
+			if (Dia.equals("31")) {JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+			test=false;}
+		}		
+		return test;
 	}
 
 }
