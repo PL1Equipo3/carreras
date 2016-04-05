@@ -34,14 +34,15 @@ import javax.swing.JFormattedTextField;
 public class CreacionPlazos extends JFrame {
 
 	private JPanel contentPane;
-	private static CrearCompetición Comp;
+	private static CrearCompetición CrearComp;
+	private static String comp;
 
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					CreacionPlazos frame = new CreacionPlazos(Comp);
+					CreacionPlazos frame = new CreacionPlazos(CrearComp, comp);
 					frame.setVisible(true);
 					//Variables
 
@@ -52,12 +53,9 @@ public class CreacionPlazos extends JFrame {
 		});
 	}
 
-	/**
-	 * Create the frame.
-	 * @param Comp 
-	 */
-	public CreacionPlazos(CrearCompetición Comp) {
-		final String id_competicion = "Travesera13";	//Se recibe por teclado
+	
+	public CreacionPlazos(CrearCompetición CrearComp, String comp) {
+		final String id_competicion = comp;
 
 		try{
 
