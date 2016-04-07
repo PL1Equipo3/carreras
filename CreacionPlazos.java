@@ -53,7 +53,7 @@ public class CreacionPlazos extends JFrame {
 		});
 	}
 
-	
+
 	public CreacionPlazos(CrearCompetición CrearComp, String comp) {
 		final String id_competicion = comp;
 
@@ -63,7 +63,7 @@ public class CreacionPlazos extends JFrame {
 			//Conexión a la BD
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 			//Ruta absoluta o relativa como parÃ¡metro de getConnection
-			Connection conn=DriverManager.getConnection("jdbc:ucanaccess://Carreras.accdb");
+			Connection conn=DriverManager.getConnection("jdbc:ucanaccess://Carreras 2ª versión.accdb");
 			final Statement s = conn.createStatement();
 
 
@@ -177,17 +177,57 @@ public class CreacionPlazos extends JFrame {
 								AñoAInt = Integer.parseInt(AñoA);
 
 
-								if (AñoAInt > AñoInt){
-									JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
-									test=false;
-								}else if (MesAInt > MesInt) {
-									JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
-									test=false;
-								}else if (DiaAInt >= DiaInt){
-									JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+								if ((MesAInt == 12) && (DiaAInt == 31) && ((AñoAInt != AñoInt-1) || (MesInt != 1) || (DiaInt != 1))){
+									JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 									test=false;
 								}
-							}
+								else {
+									if (((MesAInt == 4) || (MesAInt == 6) || (MesAInt == 9) || (MesAInt == 11)) && (DiaAInt == 30) && (AñoAInt == AñoInt) && (DiaInt != 1) && (MesAInt == MesInt-1)){
+										JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+										test=false;
+									}
+									else {
+										
+										if((AñoInt % 4 == 0 && AñoInt % 100 != 0 || AñoInt % 400 == 0) && ((MesAInt == 2) && (DiaAInt==29) && (DiaInt != 1))){
+												JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+												test=false;											
+										}
+										else {
+											if((!(AñoInt % 4 == 0 && AñoInt % 100 != 0 || AñoInt % 400 == 0)) && ((MesAInt == 2) && (DiaAInt==28) && (DiaInt != 1))){											
+													JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+													test=false;												
+											}
+											else {
+												
+												if((DiaAInt == 31) && (MesAInt != MesInt-1) && (DiaInt != 1)){
+													JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+													test=false;
+												}
+												else {
+													if (AñoAInt != AñoInt){
+														JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+														test=false;
+													}
+													else {
+														
+														if (MesAInt != MesInt){
+															JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+															test=false;
+														}
+														else {
+															if (DiaAInt != DiaInt-1){
+																JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+																test=false;
+															}
+															
+														}
+													}
+												}
+											}
+										}
+									}
+								}	//Fin del primer else
+							}	//Fin if (i!=0)
 
 
 
@@ -223,15 +263,15 @@ public class CreacionPlazos extends JFrame {
 
 
 							if (AñoAInt > AñoInt){
-								JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Error al guardar. Uno de los plazos introducidos no es válido. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 								test=false;
 							}else if (AñoAInt == AñoInt) {
 								if (MesAInt > MesInt){
-									JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+									JOptionPane.showMessageDialog(null, "Error al guardar. Uno de los plazos introducidos no es válido. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 									test=false;
 								}else if (MesAInt == MesInt){
 									if(DiaAInt >= DiaInt){
-										JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+										JOptionPane.showMessageDialog(null, "Error al guardar. Uno de los plazos introducidos no es válido. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 										test=false;
 									}
 								}
@@ -376,14 +416,14 @@ public class CreacionPlazos extends JFrame {
 			if(AñoInt % 4 == 0 && AñoInt % 100 != 0 || AñoInt % 400 == 0){			//Bisiesto
 
 				if (Dia.equals("30") || Dia.equals("31"))  {
-					JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Error al guardar. Febrero solo tiene 28 días (29 si bisiesto). Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 					test=false;}
 			}
-			else if (Dia.equals("30") || Dia.equals("31") || Dia.equals("29")) {JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+			else if (Dia.equals("30") || Dia.equals("31") || Dia.equals("29")) {JOptionPane.showMessageDialog(null, "Error al guardar. Febrero solo tiene 28 días (29 si bisiesto). Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 			test=false;}
 		}
 		else if (Mes.equals("04")||Mes.equals("06")||Mes.equals("09")||Mes.equals("11")){
-			if (Dia.equals("31")) {JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
+			if (Dia.equals("31")) {JOptionPane.showMessageDialog(null, "Error al guardar. Abril, Junio, Septiembre y Noviembre tienen 30 días Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 			test=false;}
 		}		
 		return test;
