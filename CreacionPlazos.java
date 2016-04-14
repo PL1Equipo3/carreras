@@ -66,7 +66,7 @@ public class CreacionPlazos extends JFrame {
 			//Conexión a la BD
 			Class.forName("net.ucanaccess.jdbc.UcanaccessDriver");
 			//Ruta absoluta o relativa como parÃ¡metro de getConnection
-			Connection conn=DriverManager.getConnection("jdbc:ucanaccess://Carreras 3ª versión.accdb");
+			Connection conn=DriverManager.getConnection("jdbc:ucanaccess://Carreras 2ª versión.accdb");
 			final Statement s = conn.createStatement();
 
 
@@ -213,25 +213,20 @@ public class CreacionPlazos extends JFrame {
 													
 												}
 												else {
-													if ((AñoAInt != AñoInt) && (MesAInt!=12) && (DiaAInt!=31)){
+													if ((AñoAInt != AñoInt) && (AñoLimite(DiaAInt, MesAInt) == false)){
 														JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 														test=false;
-														System.out.println("Año");
 													}
 													else {
 
-														if ((MesAInt != MesInt) && (DiaAInt<30)){
+														if ((MesAInt != MesInt) && (MesLimite(DiaAInt, MesAInt, AñoAInt)==false)){
 															JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
-															test=false;
-															System.out.println("Mes");
-														}
+															test=false;													}
 														else {
-															if (DiaAInt != DiaInt-1){
+															if (DiaAInt != DiaInt-1 && (MesLimite(DiaAInt, MesAInt, AñoAInt)==false) && (AñoLimite(DiaAInt, MesAInt) == false)){
 																JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 																test=false;
-																System.out.println("dia");
 															}
-
 														}
 													}
 												}
@@ -632,5 +627,27 @@ public class CreacionPlazos extends JFrame {
 		}
 
 		return check;
+	}
+	public boolean AñoLimite (int Dia, int Mes){	//Comprueba si es el último día del año
+		boolean test = false;
+		if ((Dia == 31) && (Mes == 12)){
+			test=true;
+		}
+		
+		return test;
+	}
+	public boolean MesLimite (int Dia, int Mes, int Año){
+		boolean test=false;
+		if ((Mes == 2) && (Dia==29) && ((Año % 4 == 0) && (Año % 100 != 0) || (Año % 400 == 0))){
+			test=true;
+		}else if ((Mes == 2) && (Dia==28) && !((Año % 4 == 0) && (Año % 100 != 0) || (Año % 400 == 0))){
+			test=true;
+		}else if (((Mes == 4) || (Mes == 6) || (Mes == 9) || (Mes == 11)) && (Dia == 30)){
+			test=true;
+		}else if (((Mes == 1) || (Mes == 3) || (Mes == 5) || (Mes == 7) || (Mes == 8) || (Mes == 10)) && (Dia == 31)){
+			test=true;
+		}
+		
+		return test;
 	}
 }
