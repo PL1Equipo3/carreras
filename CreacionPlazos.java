@@ -86,7 +86,9 @@ public class CreacionPlazos extends JFrame {
 			final DefaultListModel lmF  = new DefaultListModel();
 			final DefaultListModel lmC  = new DefaultListModel();
 			final DefaultListModel lmCF = new DefaultListModel();
-			String fechaLimite = "14-04-2019";
+
+
+
 
 			final JList listIni = new JList();
 			listIni.setBounds(309, 31, 91, 304);
@@ -135,9 +137,26 @@ public class CreacionPlazos extends JFrame {
 			JButton bAceptar = new JButton("Aceptar");
 			bAceptar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					String Dia, Mes, Año, DiaA, MesA, AñoA;
+					String Dia, Mes, Año, DiaA, MesA, AñoA, fechaLimite = null;
 					boolean test;
 					int AñoInt, MesInt, DiaInt, DiaAInt, MesAInt, AñoAInt;
+
+					//Sacamos al fecha límite
+					try{
+						String SQL="SELECT Fecha FROM Competición WHERE Id_competición = '"+comp+"'";
+						s.execute(SQL);
+						ResultSet rs = s.getResultSet();
+						rs.next();
+						fechaLimite = rs.getString(1);
+						
+
+					}
+					catch(SQLException e){
+						e.printStackTrace();
+					}
+					fechaLimite=fechaLimite.substring(0,10);
+					
+					
 					//Validación de todas las fechas
 					if ((lmI.size() != lmF.size()) || (lmI.size() != lmC.size())){
 						JOptionPane.showMessageDialog(null, "Error al guardar. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
@@ -158,9 +177,9 @@ public class CreacionPlazos extends JFrame {
 							DiaInt = Integer.parseInt(Dia);
 							AñoInt = Integer.parseInt(Año);
 
-							String DiaL = fechaLimite.substring(0, 2);
-							String MesL = fechaLimite.substring(3, 5);
-							String AñoL = fechaLimite.substring(6, 10);
+							String DiaL = fechaLimite.substring(8, 10);
+							String MesL = fechaLimite.substring(5, 7);
+							String AñoL = fechaLimite.substring(0, 4);
 
 							int DiaLInt = Integer.parseInt(DiaL);
 							int MesLInt = Integer.parseInt(MesL);
@@ -210,7 +229,7 @@ public class CreacionPlazos extends JFrame {
 												if((DiaAInt == 31) && (MesAInt != MesInt-1) && (DiaInt != 1)){
 													JOptionPane.showMessageDialog(null, "Error al guardar. Un plazo debe empezar cuando acaba otro. Revise los datos introducidos","Error",JOptionPane.ERROR_MESSAGE);
 													test=false;
-													
+
 												}
 												else {
 													if ((AñoAInt != AñoInt) && (AñoLimite(DiaAInt, MesAInt) == false)){
@@ -268,9 +287,9 @@ public class CreacionPlazos extends JFrame {
 							DiaAInt = Integer.parseInt(DiaA);
 							AñoAInt = Integer.parseInt(AñoA);
 
-							DiaL = fechaLimite.substring(0, 2);
-							MesL = fechaLimite.substring(3, 5);
-							AñoL = fechaLimite.substring(6, 10);
+							DiaL = fechaLimite.substring(8, 10);
+							MesL = fechaLimite.substring(5, 7);
+							AñoL = fechaLimite.substring(0, 4);
 
 							DiaLInt = Integer.parseInt(DiaL);
 							MesLInt = Integer.parseInt(MesL);
@@ -326,9 +345,10 @@ public class CreacionPlazos extends JFrame {
 								AñoF=AñoF.substring(6, 10);
 
 								String Cuota = String.valueOf(lmC.getElementAt(i));
-								/*
+								String CuotaFD = String.valueOf(lmCF.getElementAt(i));
+								
 								try {
-									String SQL="INSERT INTO Plazos VALUES (8, #"+AñoI+"-"+MesI+"-"+DiaI+"#, #"+AñoF+"-"+MesF+"-"+DiaF+"#, "+Cuota+", '"+id_competicion+"' )";
+									String SQL="INSERT INTO Plazos VALUES (8, #"+AñoI+"-"+MesI+"-"+DiaI+"#, #"+AñoF+"-"+MesF+"-"+DiaF+"#, "+Cuota+", "+CuotaFD+", '"+id_competicion+"' )";
 									System.out.println(SQL);
 									s.execute(SQL);
 
@@ -337,13 +357,15 @@ public class CreacionPlazos extends JFrame {
 
 									e.printStackTrace();
 								}
-								 */
+								 
 								String SQL="INSERT INTO Plazos VALUES (8, #"+AñoI+"-"+MesI+"-"+DiaI+"#, #"+AñoF+"-"+MesF+"-"+DiaF+"#, "+Cuota+", '"+id_competicion+"' )";
-								System.out.println("Todo va bien pavo, ibas a escribir esto");
-								System.out.println(SQL);
+								//System.out.println("Todo va bien pavo, ibas a escribir esto");
+								//System.out.println(SQL);
 							}
 							JOptionPane.showMessageDialog(null, "Datos Introducidos con éxito","OK",JOptionPane.INFORMATION_MESSAGE);
-							System.exit(0);
+							CreacionPlazos.this.dispose();
+							Inicial I = new Inicial();
+							I.setVisible(true);
 						}	//Fin del if						
 					}	//Fin del else
 
@@ -633,7 +655,7 @@ public class CreacionPlazos extends JFrame {
 		if ((Dia == 31) && (Mes == 12)){
 			test=true;
 		}
-		
+
 		return test;
 	}
 	public boolean MesLimite (int Dia, int Mes, int Año){
@@ -647,7 +669,7 @@ public class CreacionPlazos extends JFrame {
 		}else if (((Mes == 1) || (Mes == 3) || (Mes == 5) || (Mes == 7) || (Mes == 8) || (Mes == 10)) && (Dia == 31)){
 			test=true;
 		}
-		
+
 		return test;
 	}
 }
